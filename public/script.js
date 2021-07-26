@@ -1,11 +1,14 @@
 const socket = io('/')
 const videoGrid = document.getElementById('video-grid')
+
 const myPeer = new Peer(undefined, {
   host: '/',
   port: '4001'
-})
+});
+
 const myVideo = document.createElement('video')
 myVideo.muted = true
+
 const peers = {}
 navigator.mediaDevices.getUserMedia({
   video: true,
@@ -22,7 +25,9 @@ navigator.mediaDevices.getUserMedia({
   })
 
   socket.on('user-connected', userId => {
-    connectToNewUser(userId, stream)
+    setTimeout(()=>{
+      connectToNewUser(userId, stream)
+    }, 1000);
   })
 })
 
@@ -35,6 +40,8 @@ myPeer.on('open', id => {
 })
 
 function connectToNewUser(userId, stream) {
+  console.log(userId);
+
   const call = myPeer.call(userId, stream)
   const video = document.createElement('video')
   call.on('stream', userVideoStream => {
